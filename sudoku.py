@@ -20,7 +20,7 @@ class Sudoku:
     
     
     def fillAtempt(self):
-        print("Solving the Sudoku...")
+        #print("Solving the Sudoku...")
         self.fillCell(0,0)
 
     def fillCell(self, x, y):
@@ -35,6 +35,30 @@ class Sudoku:
         for option in options:
             self.erraseUp((x,y))
             self.insert(option,(x,y))
+            nexts = self.getNext((x,y), self.size)
+            if (nexts[0] == 0 and nexts[1] == 0):
+                return True
+            if self.fillCell(*nexts):
+                return True
+        return False
+    
+    def smartAtempt(self):
+        #print("Solving the Sudoku smartly...")
+        self.smartFill(0,0)
+
+    def smartFill(self, x, y):
+        if (self.sudokuField[x][y] != -1):
+            nexts = self.getNext((x,y), self.size)
+            if (nexts[0] == 0 and nexts[1] == 0):
+                return True
+            return self.fillCell(*nexts)
+
+        options = self.getOptions((x,y))
+        random.shuffle(options)
+        for option in options:
+            self.erraseUp((x,y))
+            self.insert(option,(x,y))
+            self.fillSafety(False)
             nexts = self.getNext((x,y), self.size)
             if (nexts[0] == 0 and nexts[1] == 0):
                 return True
